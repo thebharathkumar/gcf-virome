@@ -1,0 +1,40 @@
+# Pipeline configuration.
+#
+# Every value that affects a result is declared here rather than inside a rule,
+# so the parameters used for a given run are recoverable from one file.
+
+bioproject: PRJNA1183294
+samples_tsv: config/samples.tsv
+group_column: diagnosis
+group_levels:
+  - Periodontally healthy
+  - Periodontitis
+
+# Subsampling. Fixed before any result was inspected. Changing these changes
+# every downstream number, so they are recorded in the report.
+subsample:
+  n_pairs: 1000000
+  seed: 42
+
+# NCBI RefSeq viral genomes. Release number and URL verified 2026-09-27.
+# The multi-part viral.N.1.genomic.fna.gz scheme no longer exists; only
+# viral.1.1.genomic.fna.gz is published.
+reference:
+  refseq_release: 237
+  viral_fna_url: https://ftp.ncbi.nlm.nih.gov/refseq/release/viral/viral.1.1.genomic.fna.gz
+
+# Alignment filters. Pre-specified, not tuned against the outcome.
+mapping:
+  min_mapq: 30
+  require_proper_pair: true
+
+# A virus is called present in a sample only if both thresholds are met.
+# Breadth guards against a pile of reads stacked on one repetitive locus.
+# min_reads counts aligned reads, not pairs, because that is what
+# `samtools coverage` reports in its numreads column.
+presence:
+  min_reads: 10
+  min_breadth: 0.01
+
+# Host depletion is deliberately not performed. See README, "Host reads".
+remove_host: false

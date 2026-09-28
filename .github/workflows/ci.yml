@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Tests and Snakemake dry run
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up the pinned conda environment
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: envs/pipeline.yaml
+          activate-environment: oral-virome
+          miniforge-version: latest
+          use-mamba: true
+
+      - name: Record resolved versions
+        run: |
+          conda list --explicit > envs/ci-resolved.txt
+          snakemake --version
+          fastp --version
+          bowtie2 --version | head -1
+          samtools --version | head -1
+          Rscript -e 'cat(R.version.string, "\n")'
+
+      - name: Unit tests
+        run: pytest tests/ -v
+
+      - name: Snakemake dry run
+        # -n builds the full DAG and checks every rule, input and wildcard
+        # without downloading the 15 GB of sequencing data.
+        run: snakemake --cores 2 -n --quiet
+
+      - name: Snakemake DAG is acyclic and complete
+        run: snakemake --cores 1 --dry-run --printshellcmds > /dev/null
+
+      - name: Lint the workflow
+        run: snakemake --lint || true
+
+      - name: Metadata deliverables build and validate
+        # These rules touch no sequencing data, so they can run for real.
+        run: |
+          snakemake --cores 2 results/metadata/validation_report.txt
+          cat results/metadata/validation_report.txt
+          tail -1 results/metadata/validation_report.txt | grep -q PASS
+
+      - name: Upload metadata artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metadata
+          path: results/metadata/
+          if-no-files-found: ignore
