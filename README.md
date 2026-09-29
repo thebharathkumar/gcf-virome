@@ -145,8 +145,9 @@ which removes the characteristic signature of spurious mapping, a tall narrow
 pile on one locus.
 
 Those filters reduce the problem. They do not eliminate it. Any absolute viral
-abundance here should be read as an upper bound. The between-group comparison
-is more robust, because the bias applies to both groups.
+abundance here should be read as an upper bound. Host contamination may also
+differ between groups, since inflamed periodontal tissue sheds more host cells,
+so the between-group comparison is not protected from this bias either.
 
 The source paper states that its authors depleted human DNA before their own
 analysis. Whether the reads deposited in SRA are pre- or post-depletion could
@@ -267,7 +268,9 @@ Each sample was subsampled to 1,000,000 read pairs at seed 42. Per-sample figure
 
 4 RefSeq viral sequences passed the presence filter (at least 10 reads across at least 1% of the genome) in at least one sample.
 
-### What the aligned reads actually are
+### All aligned references, before the presence filter
+
+These are the references that received any aligned read at all. The presence filter is applied after this step, which is why only 4 of the 21 references below survive it. Showing the top 6 by read count.
 
 | Reference | Accession | Reads | Samples |
 |---|---|---:|---:|
@@ -371,3 +374,7 @@ docs/         metadata standards and their sources
 results/      all pipeline outputs (gitignored)
 report/       one-page PDF
 ```
+
+## License
+
+MIT. See [`LICENSE`](LICENSE).
