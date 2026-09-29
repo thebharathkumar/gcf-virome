@@ -95,7 +95,12 @@ lines.append(f"{len(counts)} RefSeq viral sequences passed the presence filter "
              f"sample.")
 lines.append("")
 
-lines.append("### What the aligned reads actually are")
+lines.append("### All aligned references, before the presence filter")
+lines.append("")
+lines.append(f"These are the references that received any aligned read at all. "
+             f"The presence filter is applied after this step, which is why only 4 of "
+             f"the {len(_tot)} references below survive it. Showing the top 6 by read "
+             f"count.")
 lines.append("")
 lines.append("| Reference | Accession | Reads | Samples |")
 lines.append("|---|---|---:|---:|")

@@ -1,0 +1,20 @@
+METADATA VALIDATION REPORT
+========================================================================
+
+data dictionary : results/metadata/redcap_data_dictionary.csv
+records         : results/metadata/redcap_records.csv
+biosample sheet : results/metadata/biosample_MIMS_human_oral.tsv
+sra sheet       : results/metadata/sra_metadata.tsv
+manifest        : config/samples.tsv
+
+  dictionary: 20 fields across 3 form(s)
+  records: 16 rows, 20 columns
+  biosample: 16 rows, 15 columns
+  sra: 16 rows, 14 columns
+  cross-file: 16 sample IDs agree across manifest, REDCap, BioSample and SRA
+
+checks run : 237
+errors     : 0
+warnings   : 0
+
+PASS

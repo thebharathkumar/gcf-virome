@@ -101,19 +101,32 @@ This is the part of the submission that is most often filled in carelessly,
 so each term was resolved against the EBI Ontology Lookup Service and checked
 for obsolescence before use.
 
-| Field | Term used | Status |
-|---|---|---|
-| `env_broad_scale` | `oral cavity [UBERON:0000167]` | exists, not obsolete |
-| `env_local_scale` | `gingiva [UBERON:0001828]` | exists, not obsolete |
-| `env_medium` | `bodily fluid material [ENVO:02000019]` | exists, not obsolete |
+Every ID below links to its Ontology Lookup Service entry. Click it and the
+`is_obsolete` flag and label are on the page.
+
+| Field | Term used | Status | Verify |
+|---|---|---|---|
+| `env_broad_scale` | `oral cavity [UBERON:0000167]` | exists, not obsolete | [OLS](https://www.ebi.ac.uk/ols4/ontologies/uberon/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FUBERON_0000167) |
+| `env_local_scale` | `gingiva [UBERON:0001828]` | exists, not obsolete | [OLS](https://www.ebi.ac.uk/ols4/ontologies/uberon/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FUBERON_0001828) |
+| `env_medium` | `bodily fluid material [ENVO:02000019]` | exists, not obsolete | [OLS](https://www.ebi.ac.uk/ols4/ontologies/envo/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FENVO_02000019) |
 
 Two plausible-looking choices were rejected after checking:
 
-- **`ENVO:00009003`**, widely used in real submissions as
-  "human-associated habitat", resolves to **"obsolete human-associated
-  habitat"** with `is_obsolete: true` and no recorded replacement term.
-- **`UBERON:0006932`** is **"vestibular epithelium"**, not gingival
-  crevicular fluid.
+| Rejected ID | What it actually is | Verify |
+|---|---|---|
+| `ENVO:00009003` | **"obsolete human-associated habitat"**, `is_obsolete: true`, no recorded replacement. Widely used in real submissions regardless. | [OLS](https://www.ebi.ac.uk/ols4/ontologies/envo/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FENVO_00009003) |
+| `UBERON:0006932` | **"vestibular epithelium"**, not gingival crevicular fluid. | [OLS](https://www.ebi.ac.uk/ols4/ontologies/uberon/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FUBERON_0006932) |
+
+To re-check any of these from the command line, which is the exact call used
+when the terms were chosen:
+
+```bash
+curl -sS -G "https://www.ebi.ac.uk/ols4/api/ontologies/envo/terms" \
+  --data-urlencode "iri=http://purl.obolibrary.org/obo/ENVO_00009003" \
+  | python3 -c "import sys,json; d=json.load(sys.stdin)['_embedded']['terms'][0]; \
+print(d['label'], '| is_obsolete:', d['is_obsolete'])"
+# obsolete human-associated habitat | is_obsolete: True
+```
 
 There is **no ENVO or UBERON term for gingival crevicular fluid**. The nearest
 matches in any ontology are `BTO:0003364` "gingival fluid" and MeSH
