@@ -36,5 +36,21 @@ presence:
   min_reads: 10
   min_breadth: 0.01
 
-# Host depletion is deliberately not performed. See README, "Host reads".
+# Host depletion is deliberately not performed in the original run. See
+# README, "Host reads". The results/v2 experiment below adds it alongside,
+# without changing this run.
 remove_host: false
+
+# results/v2 experiments: host depletion and aligner comparison. They reuse
+# mapping.min_mapq and the presence thresholds above unchanged; nothing in
+# this block is a filter.
+v2:
+  outdir: results/v2
+  hostile:
+    # Hostile's standard human index: T2T-CHM13v2.0 plus IPD-IMGT/HLA.
+    index_name: human-t2t-hla
+    aligner: bowtie2
+  # minimap2 preset for the aligner comparison, as specified (-ax sr).
+  minimap2_preset: sr
+  # Human endogenous retrovirus K113, tracked before and after depletion.
+  herv_k113_accession: NC_022518.1

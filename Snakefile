@@ -421,3 +421,13 @@ rule summary:
         "logs/summary.log",
     script:
         "workflow/scripts/write_summary.py"
+
+
+# ---------------------------------------------------------------------------
+# 9. results/v2: host depletion and aligner comparison
+# ---------------------------------------------------------------------------
+# Not part of rule all, so `snakemake --cores 4` still reproduces the original
+# run and nothing more. Run the experiments with:
+#   snakemake --cores 4 --use-conda v2_all
+
+include: "workflow/rules/v2.smk"

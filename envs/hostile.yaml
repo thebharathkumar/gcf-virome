@@ -1,0 +1,13 @@
+# Separate environment for Hostile, used only by the results/v2 host depletion
+# rule (snakemake --use-conda).
+#
+# Hostile 2.0.2 pins bowtie2 2.5.4, which conflicts with the bowtie2 2.5.5
+# pinned in pipeline.yaml for the viral alignment. Keeping Hostile apart means
+# the viral alignment in v2 runs on exactly the same bowtie2 as the original
+# run; only the human-read filter uses 2.5.4.
+name: hostile
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - hostile=2.0.2

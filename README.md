@@ -144,6 +144,10 @@ present when at least 10 reads spread over at least 1 percent of its genome,
 which removes the characteristic signature of spurious mapping, a tall narrow
 pile on one locus.
 
+The follow-up experiment in `results/v2/` measures this directly by
+removing human reads with Hostile and repeating the alignment. See
+"Follow-up experiments" below.
+
 Those filters reduce the problem. They do not eliminate it. Any absolute viral
 abundance here should be read as an upper bound. Host contamination may also
 differ between groups, since inflamed periodontal tissue sheds more host cells,
@@ -340,11 +344,65 @@ Bray-Curtis on relative abundance, 9999 permutations. The betadisper row tests h
    different thresholds would give different richness values. The raw counts
    are published alongside the filtered table so the effect can be checked.
 
+## Follow-up experiments (results/v2)
+
+Two experiments test the two choices the original run is most exposed on.
+Neither changes the original run: they are separate Snakemake rules in
+`workflow/rules/v2.smk`, outside `rule all`, and write only to `results/v2/`
+(plus reference indexes under `resources/`). Every filter is read from the
+same config keys as the original run: MAPQ 30, properly paired, presence at
+10 reads and 1% breadth.
+
+```bash
+snakemake --cores 4 --use-conda v2_all
+```
+
+`--use-conda` is only needed for the two Hostile rules. Hostile 2.0.2 pins
+bowtie2 2.5.4, which conflicts with the bowtie2 2.5.5 used for the viral
+alignment, so Hostile has its own environment (`envs/hostile.yaml`) and the
+viral alignment stays on exactly the original bowtie2.
+
+**1. Host depletion.** Hostile (bowtie2 mode, `human-t2t-hla` index:
+T2T-CHM13v2.0 plus IPD-IMGT/HLA) drops every pair in which either mate aligns
+to human. The bowtie2 viral alignment is then repeated. The "before" side is
+the original bowtie2 step re-run inside `results/v2/` so before and after
+share one software build, and `baseline_reproduction.tsv` checks that re-run
+against the committed v1 count table and lists any difference. Outputs:
+`host_depletion/host_depletion_per_sample.tsv` (host reads removed as % of
+post-QC reads, viral pairs, HERV-K113 reads and references passing the
+presence filter, before and after), `host_depletion/reference_changes.tsv`,
+and the unchanged `R/diversity.R` rerun on the depleted counts in
+`stats/dehost_bowtie2/`.
+
+**2. Aligner comparison.** The host-depleted reads are aligned with bowtie2
+(original settings) and `minimap2 -ax sr`, both at 4 threads, both filtered
+and counted with the same commands. Outputs in `aligner_comparison/`: viral
+pairs, references detected and wall time per aligner and sample, breadth per
+reference under both aligners, and the agreement sets. For each reference
+called by one aligner only, `discordant_reads.tsv` takes every read the
+detecting aligner counted and looks it up in the other aligner's unfiltered
+BAM: unaligned, placed on a different reference, same reference below MAPQ
+30, same reference but not a proper pair, or same reference and passing.
+
+Known asymmetry, stated before any result: bowtie2 and minimap2 compute MAPQ
+on different scales (bowtie2 tops out at 42, minimap2 at 60), so one MAPQ 30
+cutoff is not equally strict for both. The cutoff was not changed to
+compensate, because that would be tuning after the fact.
+
+`tools/smoke_v2.py` runs every v2 rule on a small planted dataset in `build/`
+and checks the outputs against the planted answers (HERV reads removed by
+depletion, baseline reproduction passes). Its numbers are synthetic and are
+never written to `results/`.
+
+**Status:** see [`results/v2/README.md`](results/v2/README.md).
+
 ## Reproducibility
 
 - All package versions are pinned in `envs/pipeline.yaml`, with the fully
   resolved dependency set in `envs/pipeline.lock.yaml` and
-  `envs/pipeline.explicit.txt`.
+  `envs/pipeline.explicit.txt`. The lock files record the environment of the
+  original run and predate the `minimap2` pin added for `results/v2/`;
+  `envs/hostile.yaml` is a separate environment for the v2 host depletion.
 - Subsampling uses a fixed seed, declared in `config/config.yaml`.
 - R uses a fixed seed; PERMANOVA uses 9999 permutations.
 - The reference URL, RefSeq release number, SHA-256 and retrieval timestamp
@@ -366,10 +424,10 @@ afterwards. Where the result is null or weak, it is reported as null or weak.
 ```
 config/       sample manifest and pipeline parameters
 envs/         pinned conda environment and lock files
-workflow/     Snakemake rule scripts
+workflow/     Snakemake rule scripts; rules/v2.smk holds the follow-up experiments
 R/            diversity statistics
 tools/        NCBI helpers, manifest generation, dataset verification
-tests/        pytest suite for the metadata validator
+tests/        pytest suites for the metadata validator and the v2 summaries
 docs/         metadata standards and their sources
 results/      all pipeline outputs (gitignored)
 report/       one-page PDF

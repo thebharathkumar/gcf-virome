@@ -31,6 +31,7 @@ jobs:
           snakemake --version
           fastp --version
           bowtie2 --version | head -1
+          minimap2 --version
           samtools --version | head -1
           Rscript -e 'cat(R.version.string, "\n")'
 
@@ -41,6 +42,10 @@ jobs:
         # -n builds the full DAG and checks every rule, input and wildcard
         # without downloading the 15 GB of sequencing data.
         run: snakemake --cores 2 -n --quiet
+
+      - name: Snakemake dry run, results/v2 experiments
+        # Host depletion and aligner comparison. Not part of rule all.
+        run: snakemake --cores 2 -n --quiet rules -- v2_all
 
       - name: Snakemake DAG is acyclic and complete
         run: snakemake --cores 1 --dry-run --printshellcmds > /dev/null

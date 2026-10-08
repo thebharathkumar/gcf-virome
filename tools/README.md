@@ -33,6 +33,7 @@ meaningless.
 | `smoke_metadata.py` | `build_metadata.py` and `validate_metadata.py` against the real manifest |
 | `smoke_diversity.py` | `R/diversity.R` on a synthetic count matrix |
 | `smoke_report.py` | `build_count_matrix.py` and `make_report.py` |
+| `smoke_v2.py` | Every `results/v2` rule end to end through Snakemake, with real Hostile, bowtie2, minimap2, samtools and R, on planted reads in a sandbox under `build/smoke_v2/` |
 
 Run them with the pipeline environment active:
 
@@ -40,6 +41,7 @@ Run them with the pipeline environment active:
 python tools/smoke_metadata.py
 python tools/smoke_diversity.py
 python tools/smoke_report.py
+python tools/smoke_v2.py     # builds the Hostile env on first use
 ```
 
 `smoke_metadata.py` is the only one whose output is meaningful, because it

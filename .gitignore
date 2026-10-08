@@ -7,10 +7,19 @@ results/*
 !results/counts/
 !results/metadata/
 !results/summary.md
+!results/v2/
 !results/qc/
 results/qc/*
 !results/qc/read_retention.tsv
 !results/qc/multiqc_report.html
+
+# results/v2: commit the summary tables, counts, statistics, Hostile reports
+# and timing; keep FASTQ and BAM out.
+results/v2/host_depletion/fastq/
+results/v2/host_depletion/tmp/
+results/v2/align/*/raw/
+results/v2/align/*/bam/
+results/v2/align/*/coverage/
 
 resources/
 logs/
