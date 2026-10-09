@@ -154,9 +154,10 @@ differ between groups, since inflamed periodontal tissue sheds more host cells,
 so the between-group comparison is not protected from this bias either.
 
 The source paper states that its authors depleted human DNA before their own
-analysis. Whether the reads deposited in SRA are pre- or post-depletion could
-not be determined from the metadata, so the conservative assumption is that
-host reads are present.
+analysis. The deposited SRA reads were not depleted: the v2 follow-up removed
+88.8789 percent of post-QC reads as human
+(`results/v2/host_depletion/host_depletion_per_sample.tsv`, TOTAL row). See
+"Follow-up experiments" below.
 
 ## Metadata
 
