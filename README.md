@@ -406,7 +406,14 @@ viral signal with it.** From
 `results/v2/host_depletion/host_depletion_per_sample.tsv` (TOTAL row), Hostile
 took 29,975,320 post-QC reads and removed 26,641,730 of them, 88.8789 percent,
 leaving 3,333,590. The per-sample rate in that same file ranges from 73.4533
-percent (PEPE010) to 98.9018 percent (ESHE017). Viral pairs passing the MAPQ 30
+percent (PEPE010) to 98.9018 percent (ESHE017). By group, healthy samples
+carried more human sequence than periodontitis samples: median host removal
+93.7 percent vs 85.5 percent, Mann-Whitney U two-sided p = 0.015, n = 8 per
+group (computed from
+`results/v2/host_depletion/host_depletion_per_sample.tsv`). This is the
+opposite of the assumption in "Host read removal" above. One untested
+explanation is higher bacterial load in periodontitis diluting host DNA. Eight
+per group is an observation, not a finding. Viral pairs passing the MAPQ 30
 proper-pair filter fell from 808 to 64, and present-calls fell from 23 to 2
 (`results/v2/counts/baseline_bowtie2/virus_presence_matrix.tsv` against
 `results/v2/counts/dehost_bowtie2/virus_presence_matrix.tsv`).
