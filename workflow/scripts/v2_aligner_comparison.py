@@ -32,7 +32,7 @@ def by_sample(paths, suffix):
 def bench_seconds(path):
     with open(path) as fh:
         row = next(csv.DictReader(fh, delimiter="\t"))
-    return float(row["s"]), float(row["max_rss"]) if row.get("max_rss") not in (None, "", "-") else None
+    return float(row["s"]), float(row["max_rss"]) if row.get("max_rss") not in (None, "", "-", "NA") else None
 
 
 with open(inp.samples) as fh:
