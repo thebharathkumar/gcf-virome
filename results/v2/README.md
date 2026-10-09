@@ -4,34 +4,40 @@ Host depletion and aligner comparison. The rules are in
 `workflow/rules/v2.smk` and the design is described in the top-level README
 under "Follow-up experiments".
 
-## Status: rules written and tested, not yet run on the real data
+## Status: run on the real data 2026-10-08
 
-There are no results in this directory yet. No number for either experiment
-has been produced, so none is reported anywhere in this repository.
+Both experiments have been run to completion on all 16 samples. The headline
+numbers and the limitations are in the top-level README under "Follow-up
+experiments"; the files in this directory are the source for every one of
+them.
 
-The rules were added from a cloud session whose network policy blocked the
-three sources the run needs:
+| File | What it holds |
+|---|---|
+| `host_depletion/host_depletion_per_sample.tsv` | Host reads removed, viral pairs, HERV-K113 reads and references present, before and after, per sample plus a TOTAL row |
+| `host_depletion/reference_changes.tsv` | Every (sample, reference) row whose reads or presence changed |
+| `host_depletion/baseline_reproduction.tsv` | v1 count table against the v2 re-run of the original step |
+| `aligner_comparison/per_aligner.tsv`, `per_sample.tsv` | Viral pairs, references present and wall time per aligner |
+| `aligner_comparison/agreement.tsv` | Which aligner called each (sample, reference) |
+| `aligner_comparison/discordant_reads.tsv`, `discordant_summary.tsv` | Per-read lookup of every discordant call in the other aligner's unfiltered BAM |
+| `stats/baseline_bowtie2/`, `stats/dehost_bowtie2/` | `R/diversity.R` rerun on each count table |
 
-| Needed for | Host | Result |
-|---|---|---|
-| Hostile `human-t2t-hla` index | `objectstorage.uk-london-1.oraclecloud.com` | blocked (HTTP 403 at the proxy) |
-| RefSeq viral release 237 | `ftp.ncbi.nlm.nih.gov` | blocked (HTTP 403 at the proxy) |
-| SRA run lookup for `prefetch` | `trace.ncbi.nlm.nih.gov`, `www.ncbi.nlm.nih.gov` | blocked (HTTP 403 at the proxy) |
+The run took 13 hours 45 minutes wall clock on an Apple Silicon MacBook Air at
+`--cores 4`, of which Hostile was 38,697.7 seconds (10.75 hours) per
+`host_depletion/benchmark/*.tsv`.
 
-The trimmed reads from the original run are not in the repository (they are
-gitignored), so they could not be reused there either.
+Two notes on the environment, both of which affect what is in these files:
 
-What was verified in that session:
+- Snakemake cannot read memory or IO counters on macOS, so `max_rss` and every
+  related field in the `benchmark/` files is `NA`, and `max_rss_mb` in
+  `aligner_comparison/per_sample.tsv` is `NA` for all 32 rows. The timing
+  columns are real.
+- `stats/dehost_bowtie2/permanova.tsv` is a single all-`NA` row. That is the
+  honest output, not a failure: after depletion only 2 nonzero cells remain
+  across 16 samples, so the Bray-Curtis dissimilarity is undefined for the
+  other 14.
 
-- `pytest tests/` passes, including `tests/test_v2lib.py` for the summary and
-  read-classification logic.
-- `snakemake -n v2_all` builds the full DAG.
-- `python tools/smoke_v2.py` ran every v2 rule through Snakemake with real
-  Hostile 2.0.2, bowtie2 2.5.5, minimap2 2.31, samtools and R on planted
-  synthetic reads, and the outputs matched what was planted: every planted
-  HERV read was removed by depletion, and the re-run baseline reproduced the
-  v1-style count table exactly. Those synthetic numbers live in `build/` and
-  are not results.
+FASTQ and BAM files under this directory are gitignored; the summary tables,
+counts, statistics and benchmarks are committed.
 
 ## To produce the results
 

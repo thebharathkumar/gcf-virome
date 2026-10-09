@@ -1,0 +1,23 @@
+sample_id	accession	virus	call
+BEHE007	NC_005294.1	Streptococcus prophage EJ-1	both
+BEHE007	NC_009643.1	Actinomyces phage Av-1	minimap2_only
+BEPE001	NC_005294.1	Streptococcus prophage EJ-1	minimap2_only
+BEPE002	NC_042057.1	Enterobacteria phage DE3	minimap2_only
+BEPE002	NC_050152.1	Enterobacteria phage P7	minimap2_only
+CLHE003	NC_012756.1	Streptococcus phage PH10	minimap2_only
+CLHE003	NC_027396.1	Streptococcus phage SpSL1	minimap2_only
+CLHE003	NC_030946.1	Streptococcus phage phiARI0923	minimap2_only
+CLHE003	NC_031941.1	Streptococcus phage phiARI0131-2	minimap2_only
+ESHE017	NC_001457.1	Human papillomavirus type 4	both
+ESPE023	NC_010945.1	Streptococcus phage PH15	minimap2_only
+ESPE023	NC_012756.1	Streptococcus phage PH10	minimap2_only
+ANY	NC_001457.1	Human papillomavirus type 4	both
+ANY	NC_005294.1	Streptococcus prophage EJ-1	both
+ANY	NC_009643.1	Actinomyces phage Av-1	minimap2_only
+ANY	NC_010945.1	Streptococcus phage PH15	minimap2_only
+ANY	NC_012756.1	Streptococcus phage PH10	minimap2_only
+ANY	NC_027396.1	Streptococcus phage SpSL1	minimap2_only
+ANY	NC_030946.1	Streptococcus phage phiARI0923	minimap2_only
+ANY	NC_031941.1	Streptococcus phage phiARI0131-2	minimap2_only
+ANY	NC_042057.1	Enterobacteria phage DE3	minimap2_only
+ANY	NC_050152.1	Enterobacteria phage P7	minimap2_only

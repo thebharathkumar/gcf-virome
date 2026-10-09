@@ -1,0 +1,17 @@
+sample_id	observed_richness	shannon	total_reads	diagnosis	country
+BEHE003	0	0	0	Periodontally healthy	Belgium
+BEHE007	1	0	10	Periodontally healthy	Belgium
+BEPE001	0	0	0	Periodontitis	Belgium
+BEPE002	0	0	0	Periodontitis	Belgium
+CLHE003	0	0	0	Periodontally healthy	Chile
+CLHE005	0	0	0	Periodontally healthy	Chile
+CLPE012	0	0	0	Periodontitis	Chile
+CLPE014	0	0	0	Periodontitis	Chile
+ESHE017	1	0	40	Periodontally healthy	Spain
+ESHE020	0	0	0	Periodontally healthy	Spain
+ESPE023	0	0	0	Periodontitis	Spain
+ESPE024	0	0	0	Periodontitis	Spain
+PEHE004	0	0	0	Periodontally healthy	Peru
+PEHE005	0	0	0	Periodontally healthy	Peru
+PEPE010	0	0	0	Periodontitis	Peru
+PEPE022	0	0	0	Periodontitis	Peru

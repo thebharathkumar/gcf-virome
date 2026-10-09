@@ -1,0 +1,20 @@
+[
+    {
+        "version": "2.0.2",
+        "aligner": "bowtie2",
+        "index": "resources/hostile/human-t2t-hla",
+        "options": [],
+        "fastq1_in_name": "CLPE014_1.fastq.gz",
+        "fastq1_in_path": "/Volumes/Bharath SSD/AI Projects/ucla/results/fastq_trimmed/CLPE014_1.fastq.gz",
+        "reads_in": 1828780,
+        "reads_out": 337746,
+        "reads_removed": 1491034,
+        "reads_removed_proportion": 0.81532,
+        "fastq2_in_name": "CLPE014_2.fastq.gz",
+        "fastq2_in_path": "/Volumes/Bharath SSD/AI Projects/ucla/results/fastq_trimmed/CLPE014_2.fastq.gz",
+        "fastq1_out_name": "CLPE014_1.clean_1.fastq.gz",
+        "fastq1_out_path": "results/v2/host_depletion/tmp/CLPE014/CLPE014_1.clean_1.fastq.gz",
+        "fastq2_out_name": "CLPE014_2.clean_2.fastq.gz",
+        "fastq2_out_path": "results/v2/host_depletion/tmp/CLPE014/CLPE014_2.clean_2.fastq.gz"
+    }
+]

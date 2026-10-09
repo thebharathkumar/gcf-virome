@@ -394,7 +394,112 @@ and checks the outputs against the planted answers (HERV reads removed by
 depletion, baseline reproduction passes). Its numbers are synthetic and are
 never written to `results/`.
 
-**Status:** see [`results/v2/README.md`](results/v2/README.md).
+### Results
+
+Both experiments have been run on the real data. Every number below names the
+file it comes from. Nothing in this section changes any v1 result; the v1
+tables in `results/` are untouched.
+
+**1. Host depletion removes almost all of the data and nearly all of the
+viral signal with it.** From
+`results/v2/host_depletion/host_depletion_per_sample.tsv` (TOTAL row), Hostile
+took 29,975,320 post-QC reads and removed 26,641,730 of them, 88.8789 percent,
+leaving 3,333,590. The per-sample rate in that same file ranges from 73.4533
+percent (PEPE010) to 98.9018 percent (ESHE017). Viral pairs passing the MAPQ 30
+proper-pair filter fell from 808 to 64, and present-calls fell from 23 to 2
+(`results/v2/counts/baseline_bowtie2/virus_presence_matrix.tsv` against
+`results/v2/counts/dehost_bowtie2/virus_presence_matrix.tsv`).
+
+The intended target was hit exactly: all 1,148 HERV-K113 reads were removed,
+leaving 0, and HERV-K113 went from a present-call in 16 of 16 samples to none
+(`results/v2/host_depletion/host_depletion_per_sample.tsv`). So the HERV-K113
+signal reported in "Host read removal: not performed, deliberately" above is
+removable, and it is host-derived.
+
+The collateral loss, however, is total. All 44 rows in
+`results/v2/host_depletion/reference_changes.tsv` move to 0 reads and not one
+row gains anything. That sweep takes the two artifacts this README already
+treats as suspect (BeAn 58058 virus, Proteus phage VB_PmiS-Isfahan) together
+with genuine bacteriophage signal. Two present-calls survive anywhere, both
+visible in `results/v2/aligner_comparison/breadth_per_reference.tsv`: Human
+papillomavirus type 4 in ESHE017 at 40 reads and 0.4174 breadth, and
+Streptococcus prophage EJ-1 in BEHE007 at 10 reads and 0.0206 breadth.
+
+Downstream statistics do not survive the depletion.
+`results/v2/stats/dehost_bowtie2/permanova.tsv` is a single all-`NA` row,
+because 2 nonzero cells across 16 samples leave the Bray-Curtis dissimilarity
+undefined for the other 14. Shannon diversity is 0 for every sample in
+`results/v2/stats/dehost_bowtie2/alpha_diversity.tsv`. The v2 baseline, by
+contrast, reproduces the v1 conclusion of no diagnosis effect (`diagnosis`
+R2 = 0.0165, p = 0.9816, in
+`results/v2/stats/baseline_bowtie2/permanova.tsv`). Hostile accounted for
+38,697.7 seconds, 10.75 hours, of the run
+(`results/v2/host_depletion/benchmark/*.tsv`).
+
+**2. minimap2 calls about five times more viral signal than bowtie2, and the
+difference is MAPQ calibration rather than sensitivity.** From
+`results/v2/aligner_comparison/per_aligner.tsv`, on the same host-depleted
+reads with identical filters, bowtie2 passed 64 viral pairs across 2
+references present with 2 sample-reference calls in 21.16 seconds, while
+minimap2 passed 316 viral pairs across 10 references with 12 calls in 100.73
+seconds. The asymmetry is complete:
+`results/v2/aligner_comparison/agreement.tsv` shows 2 calls made by both
+aligners, 10 by minimap2 alone, and 0 by bowtie2 alone.
+
+The per-read lookup in `results/v2/aligner_comparison/discordant_reads.tsv`
+explains why. Of the 290 reads behind those 10 discordant calls, 186 were
+aligned by bowtie2 to the same reference at the same locus but scored below
+MAPQ 30, and 39 of those sat at MAPQ 0. Only 31 were genuinely unaligned by
+bowtie2 and 11 went to a different reference; the remaining 62 split into 40
+that passed in both and 22 that hit the same reference without being a proper
+pair. bowtie2 mostly saw these alignments and declined to trust them.
+
+Whether minimap2 is right to keep them is not settled here.
+`results/v2/aligner_comparison/discordant_summary.tsv` gives `mean_nm` of
+7.39, 7.31 and 8.58 for the Actinomyces phage Av-1, Streptococcus phage PH10
+and PH15 calls, heavy mismatch loading consistent with cross-mapping among the
+many near-identical Streptococcus phage references, while Enterobacteria phage
+DE3 and P7 at `mean_nm` 0.08 and 1.50 look like clean alignments that bowtie2
+rejected on MAPQ and pairing grounds.
+
+**Baseline reproduction: PASS.**
+`results/v2/host_depletion/baseline_reproduction.tsv` contains one row,
+`PASS all all identical identical`. The re-run of the original bowtie2 step
+inside `results/v2/` reproduced the committed v1 count table exactly, with no
+drift at any sample or accession. None of the depletion effect above is an
+artifact of this machine or of a different tool build.
+
+### What these results do not establish
+
+**No truth set, and the human index is not masked against viral sequence.**
+Every one of the 44 changed rows in
+`results/v2/host_depletion/reference_changes.tsv` went to zero, which is what
+you would see both from Hostile correctly removing host-derived reads and from
+Hostile removing real viral reads that share sequence with the human assembly.
+The `human-t2t-hla` index is not masked for viral homology, and HERV-K113 is
+an endogenous retrovirus present in the human genome, so its removal is
+expected by construction rather than evidence of correctness. With no spike-in
+or labelled truth set in this run, the 808 to 64 drop has no denominator of
+known-viral reads to check against. The planted-read check in
+`tools/smoke_v2.py` is synthetic and its numbers stay in `build/`.
+
+**Very few reads.** bowtie2's entire post-depletion yield is 64 pairs and 2
+present-calls, and 7 of minimap2's 10 unique calls come from two samples
+(CLHE003 and ESPE023) in
+`results/v2/aligner_comparison/agreement.tsv`. Most sample-reference rows in
+`results/v2/aligner_comparison/discordant_summary.tsv` rest on single-digit
+read counts. Differences at this scale are not stable, and no confidence
+interval was computed for any of them.
+
+**Timing is not a clean benchmark and memory was never measured.** All 48
+alignments ran under one `--cores 4` invocation with other jobs competing, the
+12.10 second minimap2 index build
+(`results/v2/aligner_comparison/benchmark/minimap2_index.tsv`) is excluded from
+the 100.73 second total, and bowtie2 reused a pre-existing index while
+minimap2's was built during the run. Every `max_rss_mb` value in
+`results/v2/aligner_comparison/per_sample.tsv` is `NA`, because Snakemake
+cannot read those counters on macOS, so the memory side of the comparison is
+absent rather than measured.
 
 ## Reproducibility
 

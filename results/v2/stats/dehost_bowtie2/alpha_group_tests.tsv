@@ -1,0 +1,3 @@
+metric	group_1	n_1	median_1	iqr_1	group_2	n_2	median_2	iqr_2	test	W	p_value	rank_biserial_r
+observed_richness	Periodontally healthy	8	0	0.25	Periodontitis	8	0	0	Wilcoxon rank-sum (exact, two-sided)	24	0.16995155837391332	-0.25
+shannon	Periodontally healthy	8	0	0	Periodontitis	8	0	0	Wilcoxon rank-sum (exact, two-sided)	32	NA	0
