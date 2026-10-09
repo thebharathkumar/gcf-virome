@@ -150,8 +150,10 @@ removing human reads with Hostile and repeating the alignment. See
 
 Those filters reduce the problem. They do not eliminate it. Any absolute viral
 abundance here should be read as an upper bound. Host contamination may also
-differ between groups, since inflamed periodontal tissue sheds more host cells,
-so the between-group comparison is not protected from this bias either.
+differ between groups, so the between-group comparison is not protected from
+this bias either. The v2 follow-up found that it does differ, though not in the
+direction first assumed: healthy samples carried more host sequence than
+periodontitis samples (see "Follow-up experiments").
 
 The source paper states that its authors depleted human DNA before their own
 analysis. The deposited SRA reads were not depleted: the v2 follow-up removed
