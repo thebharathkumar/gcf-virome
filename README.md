@@ -7,14 +7,6 @@ and basic statistics on the resulting count table.
 
 It runs on a laptop. One command runs everything.
 
-## Preview
-
-[![A 24-second pass over the pipeline: 16,000,000 read pairs in, 808 viral, and the alpha-diversity figure captioned "The result is null."](docs/brag.gif)](docs/brag.mp4)
-
-The GIF is silent and loops. [`docs/brag.mp4`](docs/brag.mp4) is the same 24
-seconds at 1920x1080 with sound. Every number in both is one of the committed
-result tables linked below.
-
 ## Question
 
 In subgingival gingival crevicular fluid, does the viral fraction of the
